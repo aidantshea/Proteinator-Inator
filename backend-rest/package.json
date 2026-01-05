@@ -5,9 +5,9 @@
   "main": "dist/controllers.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "tsx watch src/controllers.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "npx tsc",
-    "start": "node dist/controllers.js"
+    "start": "node dist/server.js"
   },
   "author": "Aidan Shea",
   "license": "ISC",

@@ -1,5 +1,4 @@
-import mongoose, { Model } from 'mongoose';
-import 'dotenv/config';
+import mongoose from 'mongoose';
 
 interface Sequence {
     sequence: string;
