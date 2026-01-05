@@ -1,14 +1,23 @@
 import mongoose, { Model } from 'mongoose';
 import 'dotenv/config';
 
-let SequenceModel: Model<IsSequence> | undefined = undefined;
-
-interface IsSequence {
+interface Sequence {
     sequence: string;
     encoding: string;
     organism: string;
 }
 
+const sequenceSchema = new mongoose.Schema<Sequence>({
+    sequence: {type: String, required: true},
+    encoding: {type: String, required: true},
+    organism: {type: String, required: true}
+});
+
+const SequenceModel = mongoose.model('sequences', sequenceSchema);
+
+/**
+ * Connects to the MongoDB Atlas Cluster with a key from the .env file
+ */
 async function connect() {
     const connectString = process.env.MONGODB_CONNECT_STRING;
 
@@ -19,28 +28,21 @@ async function connect() {
     try {        
         await mongoose.connect(connectString);
         console.log("Successfully connected to MongoDB using Mongoose.");
-        SequenceModel = createModel();
     } catch (err) {
-        console.log(err);
+        console.error(err)
         throw new Error("Unable to connect to MongoDB.");
     }
 }
 
-function createModel(): Model<IsSequence> {
-    const sequenceSchema = new mongoose.Schema<IsSequence>({
-        sequence: {type: String, required: true},
-        encoding: {type: String, required: true},
-        organism: {type: String, required: true}
-    });
-    return mongoose.model('sequences', sequenceSchema);
-}
-
+/**
+ * Creates a new sequence document and uploads to the MongoDB database
+ * @param sequence - a nucleic acid or protein sequence
+ * @param encoding - indicates DNA, RNA, or Protein
+ * @param organism - organism the sequence was observed in
+ * @returns The created sequence document
+ */
 async function createSequence(sequence: string, encoding: string, organism: string) {
-    if (!SequenceModel) {
-        throw new Error("Database not connected yet.");
-    }
-    
-    return await new SequenceModel({ sequence, encoding, organism }).save();
+    return await SequenceModel.create({ sequence, encoding, organism });
 }
 
 export { connect, createSequence };
