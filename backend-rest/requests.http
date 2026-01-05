@@ -1,0 +1,10 @@
+// for testing routes with REST Client
+
+POST http://localhost:3000/sequences HTTP/1.1
+content-type: application/json
+
+{
+    "sequence": "ATGCTACGATCGTCA",
+    "encoding": "DNA",
+    "organism": "Human"
+}
